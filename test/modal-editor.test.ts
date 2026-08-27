@@ -3525,7 +3525,7 @@ describe("cursor shape rendering", () => {
     assertNoCursorShapeSequences(enabledLines);
   });
 
-  it("keeps the software cursor when focused render has no cursor marker", () => {
+  it("uses the hardware cursor while focused autocomplete emits a marker", () => {
     const tui = createCursorShapeTui({ initialShowHardwareCursor: true });
     const editor = new ModalEditor(tui, stubTheme, stubKeybindings);
     const internal = editor as unknown as { autocompleteState?: string | null };
@@ -3536,13 +3536,13 @@ describe("cursor shape rendering", () => {
 
     assert.equal(
       lines.some((line) => line.includes(CURSOR_MARKER)),
-      false,
+      true,
     );
     assert.equal(
       lines.some((line) => line.includes(SOFTWARE_CURSOR_SPACE)),
-      true,
+      false,
     );
-    assert.deepEqual(tui.terminalWrites, []);
+    assert.deepEqual(tui.terminalWrites, [INSERT_CURSOR_SHAPE]);
     assertNoCursorShapeSequences(lines);
   });
 });
